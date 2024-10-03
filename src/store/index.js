@@ -20,8 +20,8 @@ const loginInfo = () => ({
   selectedIndexStr: 1,
   imageProfile: "",
   EndpointPortal: 'https://portal.ip-one.com',
-  // Endpoint: 'https://portal.ip-one.com/ApiTruckQueue',
-  Endpoint: 'https://localhost:44333',
+  Endpoint: 'https://portal.ip-one.com/ApiTruckQueue',
+  // Endpoint: 'https://localhost:44333',
   infoLogin: {
     isLogin: false,
     authentication: false,
