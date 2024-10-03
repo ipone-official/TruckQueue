@@ -11,7 +11,15 @@ const getDefaultState = () => ({
   toDate: functions.getSysDate().format,
   manualPDF: false,
   DateDisibled: false,
-  flagGetTProcess: false
+  flagGetTruckQueue: false,
+  detailTruckQueue:  {
+      itemDataTable: [],
+      purchaseOrder: '',
+      vendorNo: '',
+      vendorDesc: '',
+      status: ''
+     }
+  
 });
 const loginInfo = () => ({
   drawer: true,

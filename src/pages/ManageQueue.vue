@@ -184,7 +184,13 @@
             {{ props.item.status }}
           </td>
 
-          <v-btn color="#007fc4" fab small class="extra-small-btn" @click="">
+          <v-btn
+            color="#007fc4"
+            fab
+            small
+            class="extra-small-btn"
+            @click="getPurchaseOrder(props.item)"
+          >
             <v-icon style="margin-top: 0.1rem; color: white">mdi-list-box-outline</v-icon>
           </v-btn>
           <v-btn
@@ -297,6 +303,27 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogDetail" persistent max-width="1080px">
+      <v-card>
+        <v-card-title style="background: #007fc4; color: white; font-size: large">
+          Detail Truck Queue
+        </v-card-title>
+        <v-card-text>
+          <detail-manage-queue></detail-manage-queue>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            flat
+            color="#007fc4"
+            style="border-radius: 12px"
+            @click="dialogDetail = false"
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar color="orange" v-model="showResult" :timeout="3500">
       {{ msgResult }}
     </v-snackbar>
@@ -315,15 +342,18 @@ import Loading from "@/components/core/Loading";
 import keyFilter from "@/plugins/keyFilter";
 import timepicker from "@/components/TimePicker.vue";
 import { isEmpty } from "lodash";
+import DetailManageQueue from "@/pages/DetailManageQueue/DetailManageQueue";
 
 export default {
   components: {
     calendar,
     Loading,
     timepicker,
+    DetailManageQueue,
   },
   data() {
     return {
+      dialogDetail: false,
       search: "",
       showResult: false,
       msgResult: "",
@@ -385,6 +415,7 @@ export default {
         { text: "Status", align: "left", sortable: true, value: "status" },
         { text: "Action", align: "left", sortable: false, value: "Action" },
       ],
+      
       hours: 0,
       minutes: 0,
     };
@@ -401,7 +432,7 @@ export default {
       if (val.length <= 9) return;
       this.GetPurchasing(val);
     },
-    flagGetTProcess(val) {
+    flagGetTruckQueue(val) {
       if (val && this.DateDisibled)
         return this.searchTruckQueue(this.formDate, this.toDate);
     },
@@ -537,7 +568,7 @@ export default {
                 this.dataTruckQueue = [];
                 this.pagination.rowsPerPage = 10;
                 this.selected = [];
-                this.flagGetTProcess = true;
+                this.flagGetTruckQueue = true;
               }
             });
           } else {
@@ -586,7 +617,7 @@ export default {
     async searchTruckQueue(startDate, endDate) {
       this.dataTruckQueue = [];
       this.loadingDialog = true;
-      this.flagGetTProcess = false;
+      this.flagGetTruckQueue = false;
       let pTruckQueueDate = {
         planDateStart: startDate,
         planDateEnd: endDate,
@@ -692,7 +723,7 @@ export default {
                 this.dataTruckQueue = [];
                 this.pagination.rowsPerPage = 10;
                 this.selected = [];
-                this.flagGetTProcess = true;
+                this.flagGetTruckQueue = true;
               }
             });
           } else {
@@ -709,6 +740,42 @@ export default {
           }
         }
       });
+    },
+    async getPurchaseOrder(item) {
+      const response = await axios.get(
+        `${this.Endpoint}/TruckQueue/v1/GetPurchasing?PurchaseOrder=${item.purchaseOrderNo}`
+      );
+      if (response.data.status == 200) {
+        this.loadingDialog = false;
+        this.dialogDetail = true
+        this.detailTruckQueue.purchaseOrder = item.purchaseOrderNo;
+        this.detailTruckQueue.vendorNo = item.vendorNo;
+        this.detailTruckQueue.vendorDesc = item.vendorDesc;
+        this.detailTruckQueue.status = item.status
+        this.detailTruckQueue.itemDataTable = response.data.results;
+      } else if (response.data.status == 404) {
+        this.loadingDialog = false;
+        Swal.fire({
+          text: `${response.data.message}`,
+          icon: "warning",
+          showCancelButton: false,
+          allowOutsideClick: false,
+          confirmButtonColor: "#0c80c4",
+          cancelButtonColor: "#C0C0C0",
+          confirmButtonText: "Ok",
+        });
+      } else {
+        this.loadingDialog = false;
+        Swal.fire({
+          text: `Internal Server Error`,
+          icon: "error",
+          showCancelButton: false,
+          allowOutsideClick: false,
+          confirmButtonColor: "#0c80c4",
+          cancelButtonColor: "#C0C0C0",
+          confirmButtonText: "Ok",
+        });
+      }
     },
   },
 };
