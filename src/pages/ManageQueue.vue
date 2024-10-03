@@ -202,8 +202,8 @@
 
     <v-dialog v-model="dialogAddTruckQueue" persistent max-width="700px">
       <v-card>
-        <v-card-title style="background: #007fc4; color: white; font-size: large;" >
-            {{ editMode == false ? "Add" : "Edit" }} Truck Queue
+        <v-card-title style="background: #007fc4; color: white; font-size: large">
+          {{ editMode == false ? "Add" : "Edit" }} Truck Queue
         </v-card-title>
         <v-card-text>
           <v-layout wrap>
@@ -689,7 +689,9 @@ export default {
               confirmButtonText: "OK",
             }).then(async (result) => {
               if (result.isConfirmed) {
-                this.resetSearch();
+                this.dataTruckQueue = [];
+                this.pagination.rowsPerPage = 10;
+                this.selected = [];
                 this.flagGetTProcess = true;
               }
             });

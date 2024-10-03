@@ -29,6 +29,26 @@
       <button v-if="fileName" style="color: red; margin-left: 1rem" @click="clearFile">
         &#10006;
       </button>
+      <v-layout justify-end>
+        <v-tooltip top color="teal" >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              fab
+              small
+              color="#007fc4"
+              dark
+              class="ma-2 small-export-button"
+              v-bind="attrs"
+              v-on="on"
+              @click="exportToExcel"
+            >
+              <v-icon size="20">mdi-microsoft-excel</v-icon>
+            </v-btn>
+          </template>
+          <span>Template Excel</span>
+        </v-tooltip>
+      </v-layout>
+    </v-layout>
       <v-layout justify-end v-if="headers.length > 0">
         <v-tooltip top color="teal">
           <template v-slot:activator="{ on, attrs }">
@@ -45,10 +65,9 @@
               <v-icon size="20">mdi-content-save-outline</v-icon>
             </v-btn>
           </template>
-          <span>Export File Excel Template</span>
+          <span>Save</span>
         </v-tooltip>
       </v-layout>
-    </v-layout>
     <div v-if="activeItem == 0" style="margin-top: 0.5rem">
       <div v-if="headers.length > 0">
         <v-data-table
@@ -308,7 +327,7 @@ export default {
               PurchaseOrderNo: this.DataImport[i].PurchaseOrderNo.toString(),
               PlanDate: this.DataImport[i].PlanDate.toString(),
               VendorNo: this.DataImport[i].VendorNo.toString(),
-              TimeStart: this.DataImport[i].TimeStart.toString(),
+              TimeStart: this.DataImport[i].TimeStart.toString().padStart(5, "0"),
               TimeEnd: this.DataImport[i].TimeEnd.toString(),
               Remark: this.DataImport[i].Remark ? this.DataImport[i].Remark : "",
               Createby: this.infoLogin.empId,
@@ -362,13 +381,37 @@ export default {
     showErrorMessage(lineNumber) {
       // แสดงข้อความเตือนเมื่อพบข้อมูลที่ไม่ถูกต้อง
       return Swal.fire({
-        text: `There is an error in the data, please check excel row ${lineNumber}.`,
+        text: `There is an error in the data, please check excel file.`,
         icon: "error",
         showCancelButton: false,
         confirmButtonColor: "#0c80c4",
         cancelButtonColor: "#C0C0C0",
         confirmButtonText: "Ok",
       });
+    },
+    async exportToExcel() {
+      let sheetOtherExpense = [
+        {
+          PurchaseOrderNo: "Ex. 33xxxxxxxx",
+          PlanDate: "Ex. 202410xx",
+          VendorNo: "Ex. 110xxxx",
+          TimeStart: "Ex. 09:xx",
+          TimeEnd: "Ex. 10:xx",
+          Remark: "Ex. Otherxx",
+        },
+      ];
+      // Convert dataObjects to worksheet
+      const ws = XLSX.utils.json_to_sheet(sheetOtherExpense);
+      // Create a new workbook and append the worksheet
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "TruckQueue");
+
+      // Apply minimal styling (if needed)
+      ws["!cols"] = sheetOtherExpense[0]
+        ? Object.keys(sheetOtherExpense[0]).map(() => ({ wpx: 100 }))
+        : [];
+
+      XLSX.writeFile(wb, "TemplateTruckQueue.xlsx", { compression: true });
     },
   },
 };
