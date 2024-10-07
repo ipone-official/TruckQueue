@@ -389,6 +389,7 @@ export default {
         { key: 1, text: "PLANED" },
         { key: 2, text: "CONFIRMED" },
         { key: 3, text: "ACCEPTED" },
+        { key: 4, text: "TIMEOUT" },
       ],
       mFilterStatus: "",
       search: "",
@@ -938,30 +939,8 @@ export default {
   },
 };
 </script>
-<style>
-.theme--light.v-table thead th {
-  background-image: -webkit-gradient(
-    linear,
-    right top,
-    left top,
-    from(rgba(51, 148, 225, 0.18)),
-    to(transparent)
-  );
-  background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #007fc4 !important;
-  font-size: 15px !important;
-  color: #ffffff !important;
-  /* background-color: #222d32;
-    background-color: #007fc4;
-    background-color: #000000;
-    background-color: #ffffff; */
-}
+<style scoped>
 
-.theme--light.v-datatable thead th.column.sortable.active,
-.theme--light.v-datatable thead th.column.sortable.active .v-icon,
-.theme--light.v-datatable thead th.column.sortable:hover {
-  color: #ffffff !important;
-}
 .extra-small-btn {
   width: 30px !important;
   height: 30px !important;

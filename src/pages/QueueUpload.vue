@@ -416,28 +416,3 @@ export default {
   },
 };
 </script>
-<style>
-.theme--light.v-table thead th {
-  background-image: -webkit-gradient(
-    linear,
-    right top,
-    left top,
-    from(rgba(51, 148, 225, 0.18)),
-    to(transparent)
-  );
-  background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #007fc4 !important;
-  font-size: 15px !important;
-  color: #ffffff !important;
-  /* background-color: #222d32;
-    background-color: #007fc4;
-    background-color: #000000;
-    background-color: #ffffff; */
-}
-
-.theme--light.v-datatable thead th.column.sortable.active,
-.theme--light.v-datatable thead th.column.sortable.active .v-icon,
-.theme--light.v-datatable thead th.column.sortable:hover {
-  color: #ffffff !important;
-}
-</style>

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '../pages/core/Login.vue';
 import Error from '../pages/core/Error.vue';
+import DisplayQueue from '../pages/DisplayQueue.vue'
 import UploadQueue from '../pages/QueueUpload.vue'
 import ManageQueue from '../pages/ManageQueue.vue'
 
@@ -9,6 +10,16 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+    {
+      path: '/DisplayQueue',
+      name: 'DisplayQueue',
+      component: DisplayQueue,
+      meta: {
+        breadcrumb: [
+          { name: 'Display Queue' }
+        ]
+      }
+    },
     {
       path: '/UploadQueue',
       name: 'UploadQueue',
