@@ -13,11 +13,18 @@ const getDefaultState = () => ({
   DateDisibled: false,
   flagGetTruckQueue: false,
   detailTruckQueue:  {
+      dialogDetail: false,
       itemDataTable: [],
       purchaseOrder: '',
       vendorNo: '',
+      planDate: '',
       vendorDesc: '',
-      status: ''
+      status: '',
+      driverName: '',
+      driverPhone: '',
+      plate: '',
+      checkIn: '',
+      checkOut:'',
      }
   
 });

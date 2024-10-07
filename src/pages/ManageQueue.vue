@@ -26,7 +26,7 @@
               small
               color="#007fc4"
               dark
-              class="extra-small-btn mt-3"
+              class="small-btn mt-2"
               v-bind="attrs"
               v-on="on"
               @click="searchTruckQueue(formDate, toDate)"
@@ -43,7 +43,7 @@
               small
               color="#007fc4"
               dark
-              class="extra-small-btn mt-3"
+              class="small-btn mt-2"
               v-bind="attrs"
               v-on="on"
               @click="resetSearch"
@@ -54,7 +54,13 @@
           <span>Clear</span>
         </v-tooltip>
       </v-flex>
-      <v-layout justify-end>
+      <v-layout
+        justify-end
+        v-if="
+          ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
+          ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+        "
+      >
         <v-tooltip top color="teal">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -62,7 +68,7 @@
               small
               color="#007fc4"
               dark
-              class="extra-small-btn mt-3"
+              class="small-btn mt-3"
               v-bind="attrs"
               v-on="on"
               @click="(dialogAddTruckQueue = true), clearField()"
@@ -75,6 +81,10 @@
         <v-tooltip top color="teal" v-if="selected.length > 0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              v-if="
+                ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
+                ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+              "
               fab
               small
               color="green"
@@ -82,7 +92,7 @@
               class="extra-small-btn mt-3"
               v-bind="attrs"
               v-on="on"
-              @click="confirmTruckQueue"
+              @click="confirmTruckQueue('CONFIRMED')"
             >
               <v-icon size="20">mdi-cloud-check-variant-outline</v-icon>
             </v-btn>
@@ -91,19 +101,25 @@
         </v-tooltip>
       </v-layout>
     </v-layout>
-    <v-toolbar
-      style="margin-top: 0.5rem"
-      xs12
-      sm8
-      color="#f8c849"
-      dark
-      tabs
-      v-if="dataTruckQueue.length == 0"
-    >
-      <v-layout justify-center style="font-size: larger"> no data available </v-layout>
-    </v-toolbar>
-    <v-layout justify-end>
-      <v-flex xs12 sm5 md4 v-if="DateDisibled">
+
+    <v-layout row wrap v-if="DateDisibled">
+      <v-flex xs12 sm5 md4>
+        <v-autocomplete
+          solo
+          v-model="mFilterStatus"
+          :items="StatusItem"
+          item-value="key"
+          item-text="text"
+          dense
+          label="Status"
+          return-object
+          hide-details
+          multiple
+        ></v-autocomplete>
+      </v-flex>
+
+      <v-spacer></v-spacer>
+      <v-flex xs12 sm5 md4>
         <v-text-field
           v-model="search"
           flat
@@ -116,6 +132,17 @@
         ></v-text-field>
       </v-flex>
     </v-layout>
+    <v-toolbar
+      style="margin-top: 0.5rem"
+      xs12
+      sm8
+      color="#f8c849"
+      dark
+      tabs
+      v-if="dataTruckQueue.length == 0"
+    >
+      <v-layout justify-center style="font-size: larger"> no data available </v-layout>
+    </v-toolbar>
     <v-data-table
       style="margin-top: 0.5rem"
       v-if="dataTruckQueue.length > 0"
@@ -194,6 +221,11 @@
             <v-icon style="margin-top: 0.1rem; color: white">mdi-list-box-outline</v-icon>
           </v-btn>
           <v-btn
+            v-if="
+              (['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) &&
+                props.item.status != 'ACCEPTED') ||
+              ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+            "
             color="red"
             fab
             small
@@ -303,7 +335,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogDetail" persistent max-width="1080px">
+    <v-dialog v-model="detailTruckQueue.dialogDetail" persistent max-width="1080px">
       <v-card>
         <v-card-title style="background: #007fc4; color: white; font-size: large">
           Detail Truck Queue
@@ -317,7 +349,7 @@
             flat
             color="#007fc4"
             style="border-radius: 12px"
-            @click="dialogDetail = false"
+            @click="detailTruckQueue.dialogDetail = false"
             >Cancel</v-btn
           >
         </v-card-actions>
@@ -353,7 +385,12 @@ export default {
   },
   data() {
     return {
-      dialogDetail: false,
+      StatusItem: [
+        { key: 1, text: "PLANED" },
+        { key: 2, text: "CONFIRMED" },
+        { key: 3, text: "ACCEPTED" },
+      ],
+      mFilterStatus: "",
       search: "",
       showResult: false,
       msgResult: "",
@@ -415,9 +452,10 @@ export default {
         { text: "Status", align: "left", sortable: true, value: "status" },
         { text: "Action", align: "left", sortable: false, value: "Action" },
       ],
-      
+
       hours: 0,
       minutes: 0,
+      rawData: [],
     };
   },
   async created() {
@@ -435,6 +473,16 @@ export default {
     flagGetTruckQueue(val) {
       if (val && this.DateDisibled)
         return this.searchTruckQueue(this.formDate, this.toDate);
+    },
+    mFilterStatus() {
+      this.dataTruckQueue = []
+      if (this.mFilterStatus.length == 0) return (this.dataTruckQueue = this.rawData);
+      let statusArray = this.mFilterStatus.map((item) => item.text);
+      this.rawData.forEach((item) => {
+        if (statusArray.includes(item.status)) {
+          this.dataTruckQueue.push(item);
+        }
+      });
     },
   },
   computed: {
@@ -566,6 +614,7 @@ export default {
                 this.clearField();
                 this.dialogAddTruckQueue = false;
                 this.dataTruckQueue = [];
+                this.rawData = [];
                 this.pagination.rowsPerPage = 10;
                 this.selected = [];
                 this.flagGetTruckQueue = true;
@@ -616,6 +665,7 @@ export default {
     },
     async searchTruckQueue(startDate, endDate) {
       this.dataTruckQueue = [];
+      this.rawData = [];
       this.loadingDialog = true;
       this.flagGetTruckQueue = false;
       let pTruckQueueDate = {
@@ -629,22 +679,57 @@ export default {
       if (response.data.status == 200) {
         this.loadingDialog = false;
         this.DateDisibled = true;
-        response.data.results.forEach((element, index) =>
-          this.dataTruckQueue.push({
-            index: index + 1,
-            planID: element.planID,
-            planDate: element.planDate,
-            vendorNo: element.vendorNo,
-            vendorDesc: element.vendorDesc,
-            timeEnd: element.timeEnd,
-            timeStart: element.timeStart,
-            remark: element.remark,
-            createBy: element.createBy,
-            updateBy: element.updateBy,
-            status: element.status,
-            purchaseOrderNo: element.purchaseOrderNo,
-          })
-        );
+        const Role = ["TruckQueue_Vendor"].some((i) => this.infoLogin.group.includes(i));
+        if (Role) {
+          const dataFilter = response.data.results.filter(
+            (result) => result.vendorNo == this.infoLogin.empId
+          );
+          dataFilter.forEach((element, index) =>
+            this.rawData.push({
+              index: index + 1,
+              planID: element.planID,
+              planDate: element.planDate,
+              vendorNo: element.vendorNo,
+              vendorDesc: element.vendorDesc,
+              timeEnd: element.timeEnd,
+              timeStart: element.timeStart,
+              remark: element.remark,
+              createBy: element.createBy,
+              updateBy: element.updateBy,
+              status: element.status,
+              purchaseOrderNo: element.purchaseOrderNo,
+              driverName: element.driverName,
+              driverPhone: element.driverPhone,
+              plate: element.plate,
+              checkIn: element.checkIn,
+              checkOut: element.checkOut,
+            })
+          );
+          this.dataTruckQueue = this.rawData;
+        } else {
+          response.data.results.forEach((element, index) =>
+            this.rawData.push({
+              index: index + 1,
+              planID: element.planID,
+              planDate: element.planDate,
+              vendorNo: element.vendorNo,
+              vendorDesc: element.vendorDesc,
+              timeEnd: element.timeEnd,
+              timeStart: element.timeStart,
+              remark: element.remark,
+              createBy: element.createBy,
+              updateBy: element.updateBy,
+              status: element.status,
+              purchaseOrderNo: element.purchaseOrderNo,
+              driverName: element.driverName,
+              driverPhone: element.driverPhone,
+              plate: element.plate,
+              checkIn: element.checkIn,
+              checkOut: element.checkOut,
+            })
+          );
+          this.dataTruckQueue = this.rawData;
+        }
       } else if (response.data.status == 404) {
         this.loadingDialog = false;
         Swal.fire({
@@ -675,6 +760,8 @@ export default {
       this.fRemark = "";
       this.fVendor = "";
       this.fVendorName = "";
+      this.driverName = "";
+      this.driverPhone = "";
       this.selectedTimeStart = "00:00";
       this.selectedTimeEnd = "00:00";
       this.$refs.timeStartRef.clearTime();
@@ -747,11 +834,17 @@ export default {
       );
       if (response.data.status == 200) {
         this.loadingDialog = false;
-        this.dialogDetail = true
+        this.detailTruckQueue.dialogDetail = true;
         this.detailTruckQueue.purchaseOrder = item.purchaseOrderNo;
         this.detailTruckQueue.vendorNo = item.vendorNo;
         this.detailTruckQueue.vendorDesc = item.vendorDesc;
-        this.detailTruckQueue.status = item.status
+        this.detailTruckQueue.planDate = item.planDate;
+        this.detailTruckQueue.status = item.status;
+        this.detailTruckQueue.driverName = item.driverName;
+        this.detailTruckQueue.driverPhone = item.driverPhone;
+        this.detailTruckQueue.plate = item.plate;
+        this.detailTruckQueue.checkIn = item.checkIn;
+        this.detailTruckQueue.checkOut = item.checkOut;
         this.detailTruckQueue.itemDataTable = response.data.results;
       } else if (response.data.status == 404) {
         this.loadingDialog = false;
@@ -776,6 +869,71 @@ export default {
           confirmButtonText: "Ok",
         });
       }
+    },
+    async confirmTruckQueue(status) {
+      Swal.fire({
+        text: `Would you like to confirm the saving of data into the system?`,
+        icon: "warning",
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: "#0c80c4",
+        cancelButtonColor: "#C0C0C0",
+        confirmButtonText: "Ok",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          let elementJson = [];
+          if (["TruckQueue_Admin"].some((i) => this.infoLogin.group.includes(i))) {
+            for (let i = 0; i < this.selected.length; i++) {
+              const element = {
+                purchaseOrderNo: this.selected[i].purchaseOrderNo,
+                planDate: this.selected[i].planDate,
+                vendorNo: this.selected[i].vendorNo,
+                updateBy: this.infoLogin.empId,
+                plate: "",
+                driverName: "",
+                driverPhone: "",
+                status: status,
+              };
+              elementJson.push(element);
+            }
+          }
+          const response = await axios.post(
+            ` ${this.Endpoint}/TruckQueue/v1/UpdateTruckQueue`,
+            elementJson
+          );
+          if (response.data.status == 200) {
+            this.loadingDialog = false;
+            Swal.fire({
+              text: `Successfully`,
+              icon: "success",
+              showCancelButton: false,
+              allowOutsideClick: false,
+              confirmButtonColor: "#0c80c4",
+              cancelButtonColor: "#C0C0C0",
+              confirmButtonText: "Ok",
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                this.clearField();
+                this.dataTruckQueue = [];
+                this.pagination.rowsPerPage = 10;
+                this.selected = [];
+                this.flagGetTruckQueue = true;
+              }
+            });
+          } else {
+            this.loadingDialog = false;
+            Swal.fire({
+              text: `Internal Server Error`,
+              icon: "error",
+              showCancelButton: false,
+              allowOutsideClick: false,
+              confirmButtonColor: "#0c80c4",
+              cancelButtonColor: "#C0C0C0",
+              confirmButtonText: "Ok",
+            });
+          }
+        }
+      });
     },
   },
 };
