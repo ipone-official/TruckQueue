@@ -210,6 +210,10 @@
             ></v-checkbox>
           </td>
           <td
+          v-show="
+              ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
+              ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+            "
             style="background: #dbdbdb !important"
             v-else-if="getDisabled(props.item.status)"
           ></td>
