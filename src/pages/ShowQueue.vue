@@ -35,8 +35,10 @@
                             <v-chip color="pink lighten-5" text-color="red" large outlined class="ma-2"
                                 style="font-size: medium;">
                                 <v-icon left color="pink darken-3">mdi-timer-sand</v-icon>
-                                {{ Math.abs(remainingTime) <= 15 ? `อีก ${Math.abs(remainingTime)}
-                                    ถึงเวลาเช็คอิน` : `เกินเวลาเช็คอิน ${formatTimeConvert(Math.abs(remainingTime))}` }} </v-chip>
+                              <h5>
+                               {{ Math.abs(remainingTime) <= 15 ? `อีก ${Math.abs(remainingTime)} ถึงเวลาเช็คอิน` :
+                                    `เกินเวลาเช็คอิน ${formatTimeConvert(Math.abs(remainingTime))}` }} </h5> 
+                                    </v-chip> 
                         </v-flex>
                     </v-layout>
 
@@ -58,7 +60,7 @@
                         style="background: linear-gradient(135deg, #bbdefb, #e3f2fd);">
 
 
-                        <v-card-title class="text-h5" style="font-size: ">
+                        <v-card-title class="text-h5">
                             <v-icon left color="primary">mdi-office-building</v-icon>
                             ชื่อบริษัท : {{ dataQueue.length == 0 ? "-" : dataQueue[0].vendorDesc }}
                         </v-card-title>
@@ -67,59 +69,99 @@
                             <!-- First Row: Driver and Phone -->
 
                             <v-layout row wrap>
+                                <!-- คนขับรถ -->
                                 <v-flex xs12 md6 class="mb-2">
-                                    <v-icon left color="primary">mdi-account</v-icon>
-                                    <strong>คนขับรถ :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[0].driverName }}
+                                    <v-layout row align-center>
+                                        <v-icon left color="primary">mdi-account</v-icon>
+                                        <strong style="margin-left: 8px;">คนขับรถ :</strong>
+                                        <span style="margin-left: 8px;">
+                                            {{ dataQueue.length == 0 ? "-" : dataQueue[0].driverName }}
+                                        </span>
+                                    </v-layout>
                                 </v-flex>
 
+                                <!-- ป้ายทะเบียนรถ -->
                                 <v-flex xs12 md6 class="mb-2">
-                                    <v-icon left color="primary">mdi-car</v-icon>
-                                    <strong>ป้ายทะเบียนรถ :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[0].plate }}
+                                    <v-layout row align-center>
+                                        <v-icon left color="primary">mdi-car</v-icon>
+                                        <strong style="margin-left: 8px;">ป้ายทะเบียนรถ :</strong>
+                                        <span style="margin-left: 8px;">
+                                            {{ dataQueue.length == 0 ? "-" : dataQueue[0].plate }}
+                                        </span>
+                                    </v-layout>
                                 </v-flex>
+
+                                <!-- เบอร์โทร -->
                                 <v-flex xs12 md6 class="mb-2">
-                                    <v-icon left color="primary">mdi-phone</v-icon>
-                                    <strong>เบอร์โทร :</strong>
-                                    {{
-                                        formatPhoneNumber(
-                                            dataQueue.length == 0 ? "-" : dataQueue[0].driverPhone
-                                    )
-                                    }}
+                                    <v-layout row align-center>
+                                        <v-icon left color="primary">mdi-phone</v-icon>
+                                        <strong style="margin-left: 8px;">เบอร์โทร :</strong>
+                                        <span style="margin-left: 8px;">
+                                            {{
+                                                formatPhoneNumber(
+                                                    dataQueue.length == 0 ? "-" : dataQueue[0].driverPhone
+                                                )
+                                            }}
+                                        </span>
+                                    </v-layout>
                                 </v-flex>
                             </v-layout>
+
 
                             <!-- Second Row: Check-in and Check-out Times -->
                             <v-layout row wrap>
+                                <!-- เวลาเริ่ม -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-outline</v-icon>
-                                    <strong>เวลาเริ่ม :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeStart }} น.
+                                    <strong style="margin-left: 8px;">เวลาเริ่ม :</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeStart }} น.
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
+
+                                <!-- เวลาที่สิ้นสุด -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-end</v-icon>
-                                    <strong>เวลาที่สิ้นสุด :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeEnd }} น.
+                                    <strong style="margin-left: 8px;">เวลาที่สิ้นสุด :</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeEnd }} น.
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
-                            </v-layout>
+                                </v-layout>
+
+
                         </v-card-text>
                         <v-divider class="my-2" v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''"></v-divider>
                         <v-card-text v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
                             <v-layout row wrap>
+                                <!-- เวลาเช็คอิน -->
                                 <v-flex xs12 md6 class="mb-2">
+                                <v-layout row align-center>
                                     <v-icon left color="primary">mdi-bus-clock</v-icon>
-                                    <strong>เวลาเช็คอิน :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : functions.formatDateFormat(dataQueue[0].checkIn) }}
-                                    น.
+                                    <strong style="margin-left: 8px;">เวลาเช็คอิน:</strong>
+                                    <span style="margin-left: 8px;">
+                                    {{ dataQueue.length == 0 ? "-" : functions.formatDateFormat(dataQueue[0].checkIn) }} น.
+                                    </span>
+                                </v-layout>
                                 </v-flex>
-                                <v-flex xs12 md6 class="mb-2"
-                                    v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
+
+                                <!-- เวลาที่ใช้ไป -->
+                                <v-flex xs12 md6 class="mb-2" v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
+                                <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-star-four-points-outline</v-icon>
-                                    <strong>เวลาที่ใช้ไป :</strong>
+                                    <strong style="margin-left: 8px;">เวลาที่ใช้ไป:</strong>
+                                    <span style="margin-left: 8px;">
                                     {{ dataQueue.length == 0 ? "-" : PassedTimeDifference(dataQueue[0].checkIn) }}
+                                    </span>
+                                </v-layout>
                                 </v-flex>
                             </v-layout>
-                        </v-card-text>
+                            </v-card-text>
+
                     </v-card>
                 </v-container>
             </v-flex>
@@ -140,7 +182,7 @@
                         align-center>
                         <v-flex xs4 md6>
                             <h3 style="margin: 0;">
-                                คิดถัดไป
+                                คิวถัดไป
                             </h3>
                         </v-flex>
 
@@ -149,9 +191,9 @@
                             <v-chip color="pink lighten-5" text-color="red" large outlined class="ma-2"
                                 style="font-size: medium;">
                                 <v-icon left color="pink darken-3">mdi-timer-sand</v-icon>
-                                {{ Math.abs(remainingTimeQueue1) <= 15 ? `อีก ${Math.abs(remainingTimeQueue1)}
-                                    ถึงเวลาเช็คอิน` : `เกินเวลาเช็คอิน ${formatTimeConvert(Math.abs(remainingTimeQueue1))}` }}
-                                    </v-chip>
+                              <h5>  {{ Math.abs(remainingTimeQueue1) <= 15 ? `อีก ${Math.abs(remainingTimeQueue1)}
+                                    ถึงเวลาเช็คอิน` : `เกินเวลาเช็คอิน
+                                    ${formatTimeConvert(Math.abs(remainingTimeQueue1))}` }} </h5></v-chip>
                         </v-flex>
                     </v-layout>
 
@@ -159,7 +201,7 @@
                     <v-layout v-else row wrap justify-center align-center>
                         <v-flex xs12>
                             <h3 style="margin: 0; text-align: center;">
-                                คิดถัดไป
+                                คิวถัดไป
                             </h3>
                         </v-flex>
                     </v-layout>
@@ -174,67 +216,106 @@
 
                         <v-card-title class="text-h5" style="font-size: ">
                             <v-icon left color="primary">mdi-office-building</v-icon>
-                            ชื่อบริษัท : {{ dataQueue.length == 0 ? "-" : dataQueue[1].vendorDesc }}
+                            ชื่อบริษัท : {{ dataQueue.length == 1 ? "-" : dataQueue[1].vendorDesc }}
                         </v-card-title>
 
                         <v-divider class="my-2"></v-divider>
                         <v-card-text>
                             <!-- First Row: Driver and Phone -->
                             <v-layout row wrap>
+                                <!-- คนขับรถ -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-account</v-icon>
-                                    <strong>คนขับรถ:</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[1].driverName }}
+                                    <strong style="margin-left: 8px;">คนขับรถ:</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 1 ? "-" : dataQueue[1].driverName }}
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
 
+                                <!-- ป้ายทะเบียนรถ -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-car</v-icon>
-                                    <strong>ป้ายทะเบียนรถ:</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[1].plate }}
+                                    <strong style="margin-left: 8px;">ป้ายทะเบียนรถ:</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 1 ? "-" : dataQueue[1].plate }}
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
+
+                                <!-- เบอร์โทร -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-phone</v-icon>
-                                    <strong>เบอร์โทร:</strong>
-                                    {{
+                                    <strong style="margin-left: 8px;">เบอร์โทร:</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{
                                         formatPhoneNumber(
-                                            dataQueue.length == 0 ? "-" : dataQueue[1].driverPhone
-                                    )
-                                    }}
+                                            dataQueue.length == 1 ? "-" : dataQueue[1].driverPhone
+                                        )
+                                        }}
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
-                            </v-layout>
+                                </v-layout>
+
 
                             <!-- Second Row: Check-in and Check-out Times -->
                             <v-layout row wrap>
+                                <!-- เวลาเริ่ม -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-outline</v-icon>
-                                    <strong>เวลาเริ่ม:</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[1].timeStart }} น.
+                                    <strong style="margin-left: 8px;">เวลาเริ่ม:</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 1 ? "-" : dataQueue[1].timeStart }} น.
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
+
+                                <!-- เวลาที่สิ้นสุด -->
                                 <v-flex xs12 md6 class="mb-2">
+                                    <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-end</v-icon>
-                                    <strong>เวลาที่สิ้นสุด:</strong>
-                                    {{ dataQueue.length == 0 ? "-" : dataQueue[1].timeEnd }} น.
+                                    <strong style="margin-left: 8px;">เวลาที่สิ้นสุด:</strong>
+                                    <span style="margin-left: 8px;">
+                                        {{ dataQueue.length == 1 ? "-" : dataQueue[1].timeEnd }} น.
+                                    </span>
+                                    </v-layout>
                                 </v-flex>
-                            </v-layout>
+                                </v-layout>
+
+
                         </v-card-text>
-                        <v-divider class="my-2" v-if="dataQueue.length > 0 && dataQueue[1].checkIn !== ''"></v-divider>
-                        <v-card-text v-if="dataQueue.length > 0 && dataQueue[1].checkIn !== ''">
-                            <v-layout row wrap>
-                                <v-flex xs12 md6 class="mb-2">
-                                    <v-icon left color="primary">mdi-bus-clock</v-icon>
-                                    <strong>เวลาเช็คอิน:</strong>
-                                    {{ dataQueue.length == 0 ? "-" : functions.formatDateFormat(dataQueue[1].checkIn) }}
-                                    น.
-                                </v-flex>
-                                <v-flex xs12 md6 class="mb-2"
-                                    v-if="dataQueue.length > 0 && dataQueue[1].checkIn !== ''">
-                                    <v-icon left color="primary">mdi-clock-star-four-points-outline</v-icon>
-                                    <strong>เวลาที่ใช้ไป :</strong>
-                                    {{ dataQueue.length == 0 ? "-" : functions.formatDateFormat(dataQueue[1].checkIn) }}
-                                    น.
-                                </v-flex>
+                        <v-divider class="my-2" v-if="dataQueue.length > 1 && dataQueue[1].checkIn !== ''"></v-divider>
+                        <v-card-text v-if="dataQueue.length > 1 && dataQueue[1].checkIn !== ''">
+                        <v-layout row wrap>
+                            <!-- เวลาเช็คอิน -->
+                            <v-flex xs12 md6 class="mb-2">
+                            <v-layout row align-center>
+                                <v-icon left color="primary">mdi-bus-clock</v-icon>
+                                <strong style="margin-left: 8px;">เวลาเช็คอิน:</strong>
+                                <span style="margin-left: 8px;">
+                                {{ dataQueue.length == 1 ? "-" : functions.formatDateFormat(dataQueue[1].checkIn) }} น.
+                                </span>
                             </v-layout>
+                            </v-flex>
+
+                            <!-- เวลาที่ใช้ไป -->
+                            <v-flex xs12 md6 class="mb-2" v-if="dataQueue.length > 1 && dataQueue[1].checkIn !== ''">
+                            <v-layout row align-center>
+                                <v-icon left color="primary">mdi-clock-star-four-points-outline</v-icon>
+                                <strong style="margin-left: 8px;">เวลาที่ใช้ไป:</strong>
+                                <span style="margin-left: 8px;">
+                                {{ dataQueue.length == 1 ? "-" : functions.formatDateFormat(dataQueue[1].checkIn) }} น.
+                                </span>
+                            </v-layout>
+                            </v-flex>
+                        </v-layout>
                         </v-card-text>
+
                     </v-card>
                 </v-container>
             </v-flex>
@@ -262,14 +343,14 @@ export default {
         this.$store.commit("resetState");
         this.searchTruckQueue();
     },
-    mounted() {
-        // Call searchTruckQueue every 3 seconds (3000 ms)
-        this.intervalId = setInterval(() => {
-            this.currentTime = new Date(); // อัปเดตเวลาปัจจุบัน
+    // mounted() {
+    //     // Call searchTruckQueue every 3 seconds (3000 ms)
+    //     this.intervalId = setInterval(() => {
+    //         this.currentTime = new Date(); // อัปเดตเวลาปัจจุบัน
 
-            this.searchTruckQueue();
-        }, 10000);
-    },
+    //         this.searchTruckQueue();
+    //     }, 10000);
+    // },
     beforeDestroy() {
         // Clear the interval when the component is destroyed to prevent memory leaks
         if (this.intervalId) {
@@ -310,14 +391,14 @@ export default {
             const diffMins = Math.floor(diffMs / 60000); // แปลง milliseconds เป็นนาที
             return diffMins
         },
-        formatTimeConvert(diffMins){
+        formatTimeConvert(diffMins) {
             if (diffMins > 0) {
-                        const hoursPassed = Math.floor(diffMins / 60); // คำนวณชั่วโมงที่ผ่านไป
-                        const minutesPassed = diffMins % 60; // นาทีที่เหลือ
-                        return `${hoursPassed} ชม. ${minutesPassed} นาที`;
-                    } else {
-                        return "0 ชม. 0 นาที"; // แสดงผลเป็น 0 ถ้าเวลายังไม่ถึง
-                    }
+                const hoursPassed = Math.floor(diffMins / 60); // คำนวณชั่วโมงที่ผ่านไป
+                const minutesPassed = diffMins % 60; // นาทีที่เหลือ
+                return `${hoursPassed} ชม. ${minutesPassed} นาที`;
+            } else {
+                return "0 ชม. 0 นาที"; // แสดงผลเป็น 0 ถ้าเวลายังไม่ถึง
+            }
         },
         formatPhoneNumber(phone) {
             if (!phone || phone.length !== 10) {
@@ -410,6 +491,11 @@ strong {
     /* ปรับขนาดข้อความตัวหนา */
 }
 
+h5 {
+    font-size: 1.3rem;
+    /* ขนาดใหญ่ขึ้นสำหรับหัวข้อ */
+}
+
 /* ปรับขนาดตัวอักษรสำหรับจอมือถือ */
 @media only screen and (max-width: 600px) {
     body {
@@ -436,5 +522,9 @@ strong {
         font-size: 1.0rem;
         /* ขนาดตัวอักษรในแถบเครื่องมือ */
     }
+    h5 {
+    font-size: 0.9rem;
+    /* ขนาดใหญ่ขึ้นสำหรับหัวข้อ */
+}
 }
 </style>
