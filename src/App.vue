@@ -44,13 +44,15 @@ export default {
     },
   },
   async mounted() {
-    if (!localStorage.getItem("samAccountTruckQueue")) {
+    const currentUrl = window.location.href; // เก็บค่า URL ปัจจุบัน
+    const showQueueUrl = "https://portal.ip-one.com/truckQueue/#/ShowQueue";
+    if (!localStorage.getItem("samAccountTruckQueue") && currentUrl !== showQueueUrl) {
       localStorage.removeItem("samAccountTruckQueue");
       localStorage.removeItem("selectedIndexTruckQueue");
       localStorage.removeItem("empIdTruckPlan");
       localStorage.removeItem("routeNameTruckPlan");
       this.$router.push({ name: "Login" });
-    } else {
+    } else if (currentUrl !== showQueueUrl) {
       this.$store.commit("resetState");
       await this.getImageProfile(localStorage.getItem("empIdTruckPlan"));
       await this.getUser(localStorage.getItem("samAccountTruckQueue"));
