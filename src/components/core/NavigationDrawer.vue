@@ -37,12 +37,6 @@
           </v-list-tile-action>
           <v-list-tile-title :class="[{'active': selectedIndex === 3}, 'item-title']">{{ $t('Upload Queue') }}</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile @click="changeRoute('ShowQueue', 4)" style="margin-left: 1rem">
-          <v-list-tile-action>
-            <v-icon>mdi-file-sign</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title']">{{ $t('Show Queue') }}</v-list-tile-title>
-        </v-list-tile>
       </v-list-group>
     </v-list>
      <!-- <PdfPreview v-if="manualPDF" @btncallback="manualPDF=false" />
