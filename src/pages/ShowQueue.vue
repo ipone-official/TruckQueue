@@ -70,7 +70,7 @@
 
                             <v-layout row wrap>
                                 <!-- คนขับรถ -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md5 class="mb-2">
                                     <v-layout row align-center>
                                         <v-icon left color="primary">mdi-account</v-icon>
                                         <strong style="margin-left: 8px;">คนขับรถ :</strong>
@@ -81,7 +81,7 @@
                                 </v-flex>
 
                                 <!-- ป้ายทะเบียนรถ -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md4 class="mb-2">
                                     <v-layout row align-center>
                                         <v-icon left color="primary">mdi-car</v-icon>
                                         <strong style="margin-left: 8px;">ป้ายทะเบียนรถ :</strong>
@@ -92,7 +92,7 @@
                                 </v-flex>
 
                                 <!-- เบอร์โทร -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md3 class="mb-2">
                                     <v-layout row align-center>
                                         <v-icon left color="primary">mdi-phone</v-icon>
                                         <strong style="margin-left: 8px;">เบอร์โทร :</strong>
@@ -111,7 +111,7 @@
                             <!-- Second Row: Check-in and Check-out Times -->
                             <v-layout row wrap>
                                 <!-- เวลาเริ่ม -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md5 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-outline</v-icon>
                                     <strong style="margin-left: 8px;">เวลาเริ่ม :</strong>
@@ -122,7 +122,7 @@
                                 </v-flex>
 
                                 <!-- เวลาที่สิ้นสุด -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md4 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-end</v-icon>
                                     <strong style="margin-left: 8px;">เวลาที่สิ้นสุด :</strong>
@@ -139,7 +139,7 @@
                         <v-card-text v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
                             <v-layout row wrap>
                                 <!-- เวลาเช็คอิน -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md5 class="mb-2">
                                 <v-layout row align-center>
                                     <v-icon left color="primary">mdi-bus-clock</v-icon>
                                     <strong style="margin-left: 8px;">เวลาเช็คอิน:</strong>
@@ -150,7 +150,7 @@
                                 </v-flex>
 
                                 <!-- เวลาที่ใช้ไป -->
-                                <v-flex xs12 md6 class="mb-2" v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
+                                <v-flex xs12 md4 class="mb-2" v-if="dataQueue.length > 0 && dataQueue[0].checkIn !== ''">
                                 <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-star-four-points-outline</v-icon>
                                     <strong style="margin-left: 8px;">เวลาที่ใช้ไป:</strong>
@@ -224,7 +224,7 @@
                             <!-- First Row: Driver and Phone -->
                             <v-layout row wrap>
                                 <!-- คนขับรถ -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md5 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-account</v-icon>
                                     <strong style="margin-left: 8px;">คนขับรถ:</strong>
@@ -235,7 +235,7 @@
                                 </v-flex>
 
                                 <!-- ป้ายทะเบียนรถ -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md4 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-car</v-icon>
                                     <strong style="margin-left: 8px;">ป้ายทะเบียนรถ:</strong>
@@ -246,7 +246,7 @@
                                 </v-flex>
 
                                 <!-- เบอร์โทร -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md3 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-phone</v-icon>
                                     <strong style="margin-left: 8px;">เบอร์โทร:</strong>
@@ -265,7 +265,7 @@
                             <!-- Second Row: Check-in and Check-out Times -->
                             <v-layout row wrap>
                                 <!-- เวลาเริ่ม -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md5 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-outline</v-icon>
                                     <strong style="margin-left: 8px;">เวลาเริ่ม:</strong>
@@ -276,7 +276,7 @@
                                 </v-flex>
 
                                 <!-- เวลาที่สิ้นสุด -->
-                                <v-flex xs12 md6 class="mb-2">
+                                <v-flex xs12 md4 class="mb-2">
                                     <v-layout row align-center>
                                     <v-icon left color="primary">mdi-clock-end</v-icon>
                                     <strong style="margin-left: 8px;">เวลาที่สิ้นสุด:</strong>
