@@ -23,8 +23,6 @@
   </div>
 </template>
 
-
-
 <script>
 import { sync } from "vuex-pathify";
 import axios from "axios";
@@ -45,20 +43,20 @@ export default {
       this.toggle = val;
     },
   },
- async mounted() {
+  async mounted() {
     if (!localStorage.getItem("samAccountTruckQueue")) {
-      localStorage.removeItem('samAccountTruckQueue')
-      localStorage.removeItem('selectedIndexTruckQueue')
-      localStorage.removeItem('empIdTruckPlan')
-      localStorage.removeItem('routeNameTruckPlan')
+      localStorage.removeItem("samAccountTruckQueue");
+      localStorage.removeItem("selectedIndexTruckQueue");
+      localStorage.removeItem("empIdTruckPlan");
+      localStorage.removeItem("routeNameTruckPlan");
       this.$router.push({ name: "Login" });
     } else {
       this.$store.commit("resetState");
-      await this.getImageProfile(localStorage.getItem("empIdTruckPlan"))
+      await this.getImageProfile(localStorage.getItem("empIdTruckPlan"));
       await this.getUser(localStorage.getItem("samAccountTruckQueue"));
       this.$router.push({ name: localStorage.getItem("routeNameTruckPlan") });
       this.selectedIndexStr = Number(localStorage.getItem("selectedIndexTruckQueue"));
-          // Start the inactivity timer
+      // Start the inactivity timer
       this.startInactivityTimer();
       window.addEventListener("mousemove", this.resetTimer);
       window.addEventListener("keypress", this.resetTimer);
@@ -94,10 +92,10 @@ export default {
         confirmButtonText: "OK",
       }).then(() => {
         this.$store.commit("resetState");
-        localStorage.removeItem('samAccountTruckQueue')
-        localStorage.removeItem('selectedIndexTruckQueue')
-        localStorage.removeItem('empIdTruckPlan')
-        localStorage.removeItem('routeNameTruckPlan')
+        localStorage.removeItem("samAccountTruckQueue");
+        localStorage.removeItem("selectedIndexTruckQueue");
+        localStorage.removeItem("empIdTruckPlan");
+        localStorage.removeItem("routeNameTruckPlan");
         this.$router.push({ name: "Login" });
       });
     },
@@ -124,7 +122,8 @@ export default {
         console.error(error);
       }
     },
-     async getImageProfile(empId) {
+    async getImageProfile(empId) {
+      this.imageProfile = "";
       const response = await axios.get(
         `${this.EndpointPortal}/AdsControl/IP1Potal/v1/getUserProfile?empId=${empId}`
       );
