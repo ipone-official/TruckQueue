@@ -904,7 +904,7 @@ export default {
         if (result.isConfirmed) {
           let elementJson = [];
           if (
-            ["TruckQueue_Admin", "TruckQueue_Vendor"].some((i) =>
+            ["TruckQueue_Admin", "TruckQueue_Planning"].some((i) =>
               this.infoLogin.group.includes(i)
             )
           ) {
