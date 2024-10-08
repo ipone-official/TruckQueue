@@ -343,14 +343,14 @@ export default {
         this.$store.commit("resetState");
         this.searchTruckQueue();
     },
-    // mounted() {
-    //     // Call searchTruckQueue every 3 seconds (3000 ms)
-    //     this.intervalId = setInterval(() => {
-    //         this.currentTime = new Date(); // อัปเดตเวลาปัจจุบัน
+    mounted() {
+        // Call searchTruckQueue every 3 seconds (3000 ms)
+        this.intervalId = setInterval(() => {
+            this.currentTime = new Date(); // อัปเดตเวลาปัจจุบัน
 
-    //         this.searchTruckQueue();
-    //     }, 10000);
-    // },
+            this.searchTruckQueue();
+        }, 10000);
+    },
     beforeDestroy() {
         // Clear the interval when the component is destroyed to prevent memory leaks
         if (this.intervalId) {
@@ -492,7 +492,7 @@ strong {
 }
 
 h5 {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     /* ขนาดใหญ่ขึ้นสำหรับหัวข้อ */
 }
 
