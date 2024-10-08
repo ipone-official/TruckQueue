@@ -1,18 +1,18 @@
 <template>
   <div style="margin: 0.5rem">
     <v-toolbar
-        style="margin-top: 0.5rem"
-        xs12
-        sm8
-        color="#f8c849"
-        dark
-        tabs
-        v-if="dataQueue.length == 0"
-      >
-        <v-layout justify-center style="font-size: larger"
-          >ไม่มีข้อมูลบริษัทที่ต้องเข้าส่งสินค้า
-        </v-layout>
-      </v-toolbar>
+      style="margin-top: 0.5rem"
+      xs12
+      sm8
+      color="#f8c849"
+      dark
+      tabs
+      v-if="dataQueue.length == 0"
+    >
+      <v-layout justify-center style="font-size: larger"
+        >ไม่มีข้อมูลบริษัทที่ต้องเข้าส่งสินค้า
+      </v-layout>
+    </v-toolbar>
     <v-layout row wrap v-if="dataQueue.length > 0">
       <!-- Left Side (50% on medium and up, full width on mobile) -->
       <v-flex md6 xs12>
@@ -56,10 +56,15 @@
             </v-card-text>
             <v-divider class="my-2"></v-divider>
             <v-card-actions v-if="dataQueue.length > 0">
-              <v-layout row wrap justify-center  v-if="
-          ['TruckQueue_Verify'].some((i) => infoLogin.group.includes(i)) ||
-          ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
-        ">
+              <v-layout
+                row
+                wrap
+                justify-center
+                v-if="
+                  ['TruckQueue_Verify'].some((i) => infoLogin.group.includes(i)) ||
+                  ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+                "
+              >
                 <v-flex
                   xs12
                   md4
@@ -219,17 +224,6 @@ export default {
             checkOut: element.checkOut,
           })
         );
-      } else if (response.data.status == 404) {
-        this.loadingDialog = false;
-        Swal.fire({
-          text: `${response.data.message}`,
-          icon: "warning",
-          showCancelButton: false,
-          allowOutsideClick: false,
-          confirmButtonColor: "#0c80c4",
-          cancelButtonColor: "#C0C0C0",
-          confirmButtonText: "Ok",
-        });
       } else {
         this.loadingDialog = false;
         Swal.fire({
@@ -263,16 +257,18 @@ export default {
         cancelButtonText: "ยกเลิก",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const elementJson = [{
-            purchaseOrderNo: this.dataQueue[0].purchaseOrderNo,
-            planDate: this.dataQueue[0].planDate,
-            vendorNo: this.dataQueue[0].vendorNo,
-            updateBy: this.infoLogin.empId,
-            plate: this.dataQueue[0].plate,
-            driverName: this.dataQueue[0].driverName,
-            driverPhone: this.dataQueue[0].driverPhone,
-            status: status,
-          }];
+          const elementJson = [
+            {
+              purchaseOrderNo: this.dataQueue[0].purchaseOrderNo,
+              planDate: this.dataQueue[0].planDate,
+              vendorNo: this.dataQueue[0].vendorNo,
+              updateBy: this.infoLogin.empId,
+              plate: this.dataQueue[0].plate,
+              driverName: this.dataQueue[0].driverName,
+              driverPhone: this.dataQueue[0].driverPhone,
+              status: status,
+            },
+          ];
           const response = await axios.post(
             ` ${this.Endpoint}/TruckQueue/v1/UpdateTruckQueue`,
             elementJson
@@ -318,6 +314,4 @@ export default {
   border-radius: 10px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
-
-
 </style>

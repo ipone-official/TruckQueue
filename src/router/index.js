@@ -5,11 +5,24 @@ import Error from '../pages/core/Error.vue';
 import DisplayQueue from '../pages/DisplayQueue.vue'
 import UploadQueue from '../pages/QueueUpload.vue'
 import ManageQueue from '../pages/ManageQueue.vue'
+import ShowQueue from '../pages/ShowQueue.vue'
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
+    {
+      path: '/ShowQueue',
+      name: 'ShowQueue',
+      component: ShowQueue,
+     
+      meta: {
+        allowAnonymous: true,
+        breadcrumb: [
+          { name: 'Show Queue' }
+        ]
+      }
+    },
     {
       path: '/DisplayQueue',
       name: 'DisplayQueue',
