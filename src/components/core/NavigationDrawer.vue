@@ -30,7 +30,7 @@
           <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title']">{{ $t('Manage Queue') }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="changeRoute('UploadQueue', 3)" style="margin-left: 1rem" v-if="
-          !['TruckQueue_Verify'].some((i) => infoLogin.group.includes(i))
+          !['TruckQueue_Verify', 'TruckQueue_Vendor'].some((i) => infoLogin.group.includes(i))
         ">
           <v-list-tile-action>
             <v-icon>mdi-file-sign</v-icon>

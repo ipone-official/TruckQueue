@@ -61,7 +61,6 @@ export default {
           click: () => {
             const vm = this;
             vm.$store.commit("resetState");
-            vm.loginInfo.imageProfile = ''
             localStorage.removeItem('samAccountTruckQueue')
             localStorage.removeItem('routeNameTruckPlan')
             localStorage.removeItem('selectedIndexTruckQueue')

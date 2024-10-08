@@ -89,7 +89,7 @@
               small
               color="green"
               dark
-              class="extra-small-btn mt-3"
+              class="small-btn mt-3"
               v-bind="attrs"
               v-on="on"
               @click="confirmTruckQueue('CONFIRMED')"
@@ -143,6 +143,7 @@
     >
       <v-layout justify-center style="font-size: larger"> no data available </v-layout>
     </v-toolbar>
+    <!-- {{ selected }} -->
     <v-data-table
       style="margin-top: 0.5rem"
       v-if="dataTruckQueue.length > 0"
@@ -157,7 +158,13 @@
     >
       <template v-slot:headers="props">
         <tr>
-          <th style="background: #dbdbdb !important">
+          <th
+            style="background: #dbdbdb !important"
+            v-if="
+              ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
+              ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+            "
+          >
             <v-checkbox
               :input-value="props.all"
               :indeterminate="props.indeterminate"
@@ -181,13 +188,22 @@
           </th>
         </tr>
       </template>
+
       <template v-slot:items="props">
         <tr>
           <td
             style="background: #dbdbdb !important"
             v-if="!getDisabled(props.item.status)"
           >
-            <v-checkbox v-model="props.selected" primary hide-details></v-checkbox>
+            <v-checkbox
+              v-if="
+                ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
+                ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+              "
+              v-model="props.selected"
+              primary
+              hide-details
+            ></v-checkbox>
           </td>
           <td
             style="background: #dbdbdb !important"
@@ -476,7 +492,7 @@ export default {
         return this.searchTruckQueue(this.formDate, this.toDate);
     },
     mFilterStatus() {
-      this.dataTruckQueue = []
+      this.dataTruckQueue = [];
       if (this.mFilterStatus.length == 0) return (this.dataTruckQueue = this.rawData);
       let statusArray = this.mFilterStatus.map((item) => item.text);
       this.rawData.forEach((item) => {
@@ -883,7 +899,11 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           let elementJson = [];
-          if (["TruckQueue_Admin"].some((i) => this.infoLogin.group.includes(i))) {
+          if (
+            ["TruckQueue_Admin", "TruckQueue_Vendor"].some((i) =>
+              this.infoLogin.group.includes(i)
+            )
+          ) {
             for (let i = 0; i < this.selected.length; i++) {
               const element = {
                 purchaseOrderNo: this.selected[i].purchaseOrderNo,
@@ -940,7 +960,6 @@ export default {
 };
 </script>
 <style scoped>
-
 .extra-small-btn {
   width: 30px !important;
   height: 30px !important;
