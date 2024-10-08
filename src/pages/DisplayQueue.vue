@@ -224,6 +224,8 @@ export default {
             checkOut: element.checkOut,
           })
         );
+      } else  if (response.data.status == 404) {
+        return this.loadingDialog = false;
       } else {
         this.loadingDialog = false;
         Swal.fire({
