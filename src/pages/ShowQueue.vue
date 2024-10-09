@@ -191,7 +191,7 @@
                             <v-chip color="pink lighten-5" text-color="red" large outlined class="ma-2"
                                 style="font-size: medium;">
                                 <v-icon left color="pink darken-3">mdi-timer-sand</v-icon>
-                              <h5>  {{ remainingTimeQueue1 <= 15  && remainingTimeQueue1 > 0 ? `อีก ${Math.abs(remainingTimeQueue1)} นาที
+                              <h5>  {{ remainingTimeQueue1 <= 15  && remainingTimeQueue1 >= 0 ? `อีก ${Math.abs(remainingTimeQueue1)} นาที
                                     ถึงเวลาเช็คอิน` : `เกินเวลาเช็คอิน
                                     ${formatTimeConvert(Math.abs(remainingTimeQueue1))}` }} </h5></v-chip>
                         </v-flex>
