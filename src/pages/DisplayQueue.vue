@@ -53,6 +53,40 @@
                 <strong>เวลาที่สิ้นสุด:</strong>
                 {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeEnd }} น.
               </div>
+              <v-divider class="my-2"></v-divider>
+              <v-layout
+                row
+                wrap
+                v-if="
+                  ['TruckQueue_Verify'].some((i) => infoLogin.group.includes(i)) ||
+                  ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+                "
+              >
+                <v-flex xs12 sm6 md6>
+                  <v-autocomplete
+                    v-model="mReason"
+                    prepend-icon="mdi-alert-octagon-outline"
+                    :items="itemReason"
+                    item-value="reasonID"
+                    item-text="reasonDesc"
+                    dense
+                    label="ปัญหาที่พบ"
+                    return-object
+                    hide-details
+                    class="custom-autocomplete"
+                  ></v-autocomplete>
+                </v-flex>
+                <v-flex xs12 sm12 md12 v-if="mReason.reasonID == 'R999'">
+                  <v-textarea
+                    v-model="fRemark"
+                    prepend-icon="mdi-note-text-outline"
+                    maxlength="100"
+                    counter="100"
+                    rows="2"
+                    label="สาเหตุเกิดจาก"
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
             </v-card-text>
             <v-divider class="my-2"></v-divider>
             <v-card-actions v-if="dataQueue.length > 0">
@@ -152,6 +186,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { sync } from "vuex-pathify";
 import Loading from "@/components/core/Loading";
+import { watch } from "vue";
 
 export default {
   comments: {
@@ -178,14 +213,23 @@ export default {
         { text: "100", value: 100 },
       ],
       dataQueue: [],
+      itemReason: [],
+      mReason: { reasonID: "R000", reasonDesc: "ไม่พบปัญหา" },
+      fRemark: "",
     };
   },
   async created() {
     this.$store.commit("resetState");
     this.searchTruckQueue();
+    this.getReason();
   },
   computed: {
     ...sync("*"),
+  },
+  watch: {
+    mReason(val) {
+      if (val.reasonID !== "R000") return (this.fRemark = "");
+    },
   },
   methods: {
     formatPhoneNumber(phone) {
@@ -193,6 +237,14 @@ export default {
         return phone;
       }
       return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+    },
+
+    async getReason() {
+      this.loadingDialog = true;
+      const response = await axios.get(`${this.Endpoint}/TruckQueue/v1/GetReason`);
+      if (response.data.status == 200) {
+        this.itemReason = response.data.results;
+      }
     },
     async searchTruckQueue() {
       this.dataQueue = [];
@@ -224,8 +276,8 @@ export default {
             checkOut: element.checkOut,
           })
         );
-      } else  if (response.data.status == 404) {
-        return this.loadingDialog = false;
+      } else if (response.data.status == 404) {
+        return (this.loadingDialog = false);
       } else {
         this.loadingDialog = false;
         Swal.fire({
@@ -269,6 +321,9 @@ export default {
               driverName: this.dataQueue[0].driverName,
               driverPhone: this.dataQueue[0].driverPhone,
               status: status,
+              reasonID: this.mReason.reasonID,
+              reasonDesc:
+                this.mReason.reasonID == "R999" ? this.fRemark : this.mReason.reasonDesc,
             },
           ];
           const response = await axios.post(
@@ -288,6 +343,7 @@ export default {
             }).then(async (result) => {
               if (result.isConfirmed) {
                 this.searchTruckQueue();
+                this.getReason();
               }
             });
           } else {

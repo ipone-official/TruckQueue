@@ -76,7 +76,7 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     startInactivityTimer() {
-      this.inactivityTimer = setTimeout(this.logoutUser, 3600000); // 3600000 ms = 60 minutes
+      this.inactivityTimer = setTimeout(this.logoutUser, 7200000); // 3600000 ms = 60 minutes
     },
     resetTimer() {
       clearTimeout(this.inactivityTimer);
