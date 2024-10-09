@@ -53,7 +53,7 @@
                 <strong>เวลาที่สิ้นสุด:</strong>
                 {{ dataQueue.length == 0 ? "-" : dataQueue[0].timeEnd }} น.
               </div>
-              <v-divider class="my-2"></v-divider>
+              <v-divider class="my-2"  v-if="dataQueue.length > 0 && dataQueue[0].checkIn != ''"></v-divider>
               <v-layout
                 row
                 wrap
@@ -89,7 +89,7 @@
                 </v-flex>
               </v-layout>
             </v-card-text>
-            <v-divider class="my-2"></v-divider>
+            <v-divider class="my-2" ></v-divider>
             <v-card-actions v-if="dataQueue.length > 0">
               <v-layout
                 row
@@ -324,7 +324,7 @@ export default {
               status: status,
               reasonID: dataQueue[0].checkIn != "" ? this.mReason.reasonID : "",
               reasonDesc:
-                dataQueue[0].checkIn != ""
+                this.dataQueue[0].checkIn != ""
                   ? this.mReason.reasonID == "R999"
                     ? this.fRemark
                     : this.mReason.reasonDesc
