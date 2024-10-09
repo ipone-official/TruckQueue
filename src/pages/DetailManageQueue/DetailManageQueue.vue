@@ -201,6 +201,9 @@
     <v-snackbar color="orange" v-model="showResult" :timeout="3500">
       {{ msgResult }}
     </v-snackbar>
+  <div v-if="loadingDialog">
+      <Loading :value="loadingDialog" />
+    </div>
   </div>
 </template>
 <script>
@@ -218,6 +221,7 @@ export default {
   },
   data() {
     return {
+      loadingDialog: false,
       keyFilter,
       showResult: false,
       msgResult: "",
@@ -307,6 +311,7 @@ export default {
               status: status,
             },
           ];
+          this.loadingDialog = true;
           const response = await axios.post(
             ` ${this.Endpoint}/TruckQueue/v1/UpdateTruckQueue`,
             elementJson
