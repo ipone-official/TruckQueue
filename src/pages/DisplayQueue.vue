@@ -59,7 +59,8 @@
                 wrap
                 v-if="
                   ['TruckQueue_Verify'].some((i) => infoLogin.group.includes(i)) ||
-                  ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+                  (['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i)) &&
+                    dataQueue[0].checkIn != '')
                 "
               >
                 <v-flex xs12 sm6 md6>
@@ -321,9 +322,13 @@ export default {
               driverName: this.dataQueue[0].driverName,
               driverPhone: this.dataQueue[0].driverPhone,
               status: status,
-              reasonID: this.mReason.reasonID,
+              reasonID: dataQueue[0].checkIn != "" ? this.mReason.reasonID : "",
               reasonDesc:
-                this.mReason.reasonID == "R999" ? this.fRemark : this.mReason.reasonDesc,
+                dataQueue[0].checkIn != ""
+                  ? this.mReason.reasonID == "R999"
+                    ? this.fRemark
+                    : this.mReason.reasonDesc
+                  : "",
             },
           ];
           const response = await axios.post(
