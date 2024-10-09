@@ -14,11 +14,7 @@
 export default {
   name: "TimePicker",
   props: {
-    value: null,
-    label: {
-      type: String,
-      default: '00:00',
-    },
+    value: { type: String, default: "00:00" }, // Use 'value' to support :value.sync
   },
   data() {
     return {
@@ -27,22 +23,28 @@ export default {
     };
   },
   mounted() {
-    // Set default to 00:00 if no value is provided
-    if (this.value) {
-      const [hours, minutes] = this.value.split(":");
-      this.hours = parseInt(hours);
-      this.minutes = parseInt(minutes);
-    } else {
-      this.hours = 0;
-      this.minutes = 0;
-    }
+    this.updateInternalTime(this.value); // Initialize with the current value
+  },
+  watch: {
+    value(newValue) {
+      // Watch for changes in the parent prop and update the internal time
+      this.updateInternalTime(newValue);
+    },
   },
   methods: {
     pad(number) {
       return number < 10 ? "0" + number : number;
     },
     updateTime() {
-      this.$emit('input', `${this.pad(this.hours)}:${this.pad(this.minutes)}`);
+      const time = `${this.pad(this.hours)}:${this.pad(this.minutes)}`;
+      this.$emit("input", time); // Emit 'input' to work with .sync
+    },
+    updateInternalTime(value) {
+      if (value) {
+        const [hours, minutes] = value.split(":");
+        this.hours = parseInt(hours);
+        this.minutes = parseInt(minutes);
+      }
     },
     clearTime() {
         this.hours = 0;

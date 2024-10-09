@@ -25,6 +25,7 @@ const getDefaultState = () => ({
       plate: '',
       checkIn: '',
       checkOut:'',
+      remark: ''
      }
   
 });

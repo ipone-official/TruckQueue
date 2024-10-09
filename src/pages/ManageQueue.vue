@@ -55,6 +55,7 @@
         </v-tooltip>
       </v-flex>
       <v-layout
+        style="margin-top: -0.6rem"
         justify-end
         v-if="
           ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
@@ -210,7 +211,7 @@
             ></v-checkbox>
           </td>
           <td
-          v-show="
+            v-show="
               ['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) ||
               ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
             "
@@ -243,6 +244,20 @@
             @click="getPurchaseOrder(props.item)"
           >
             <v-icon style="margin-top: 0.1rem; color: white">mdi-list-box-outline</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="
+              (['TruckQueue_Planning'].some((i) => infoLogin.group.includes(i)) &&
+                props.item.status == 'PLANNED') ||
+              ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
+            "
+            color="#f8c849"
+            fab
+            small
+            class="extra-small-btn"
+            @click="editTruckQueue(props.item)"
+          >
+            <v-icon style="margin-top: 0.1rem; color: white">mdi-pencil-outline</v-icon>
           </v-btn>
           <v-btn
             v-if="
@@ -292,6 +307,7 @@
                 prepend-icon="mdi-account-sync-outline"
                 @keydown.native="keyFilter($event, 'number')"
                 label="Vendor No"
+                :disabled="true"
                 maxlength="7"
                 prefix="*"
                 hide-details
@@ -346,7 +362,7 @@
             class="white--text"
             text
             style="border-radius: 12px"
-            @click="submitTruckQueue"
+            @click="submitTruckQueue(editMode)"
             >Submit</v-btn
           >
           <v-btn
@@ -422,7 +438,6 @@ export default {
       loadingDialog: false,
       dialogAddTruckQueue: false,
       fDate: functions.getSysDate().format,
-      editMode: false,
       fPurchasing: "",
       fRemark: "",
       fVendor: "",
@@ -481,6 +496,9 @@ export default {
       hours: 0,
       minutes: 0,
       rawData: [],
+      editMode: false,
+      editId: 0,
+      editItem: {},
     };
   },
   async created() {
@@ -492,7 +510,8 @@ export default {
       this.GetVendor(val);
     },
     fPurchasing(val) {
-      if (val.length <= 9) return;
+      if (val.length <= 9) return (this.fVendor = "");
+
       this.GetPurchasing(val);
     },
     flagGetTruckQueue(val) {
@@ -513,14 +532,18 @@ export default {
   computed: {
     ...sync("*"),
   },
-  mounted() {
-    if (this.value) {
-      const [hours, minutes] = this.value.split(":");
-      this.hours = parseInt(hours);
-      this.minutes = parseInt(minutes);
-    }
-  },
   methods: {
+    editTruckQueue(val) {
+      this.dialogAddTruckQueue = true;
+      this.editMode = true;
+      this.editId = val.itemNo;
+      this.editItem = val;
+      this.fDate = val.planDate;
+      this.fPurchasing = val.purchaseOrderNo;
+      this.selectedTimeStart = val.timeStart;
+      this.selectedTimeEnd = val.timeEnd;
+      this.fRemark = val.remark;
+    },
     async GetPurchasing(purchaseOrder) {
       this.loadingDialog = true;
       const response = await axios.get(
@@ -585,7 +608,7 @@ export default {
         });
       }
     },
-    submitTruckQueue() {
+    submitTruckQueue(mode) {
       if (isEmpty(this.fPurchasing)) {
         this.showResult = true;
         return (this.msgResult = "Purchasing order can't be null.");
@@ -791,6 +814,9 @@ export default {
       this.selectedTimeEnd = "00:00";
       this.$refs.timeStartRef.clearTime();
       this.$refs.timeEndRef.clearTime();
+      this.editMode = false;
+      this.editId = 0;
+      this.editItem = {};
     },
     resetSearch() {
       this.DateDisibled = false;
@@ -853,12 +879,30 @@ export default {
         }
       });
     },
+    clearDetailTruckQueue() {
+      this.detailTruckQueue = {
+        dialogDetail: false,
+        itemDataTable: [],
+        purchaseOrder: "",
+        vendorNo: "",
+        planDate: "",
+        vendorDesc: "",
+        status: "",
+        driverName: "",
+        driverPhone: "",
+        plate: "",
+        checkIn: "",
+        checkOut: "",
+        remark: "",
+      };
+    },
     async getPurchaseOrder(item) {
       const response = await axios.get(
         `${this.Endpoint}/TruckQueue/v1/GetPurchasing?PurchaseOrder=${item.purchaseOrderNo}`
       );
       if (response.data.status == 200) {
         this.loadingDialog = false;
+        this.clearDetailTruckQueue();
         this.detailTruckQueue.dialogDetail = true;
         this.detailTruckQueue.purchaseOrder = item.purchaseOrderNo;
         this.detailTruckQueue.vendorNo = item.vendorNo;
@@ -870,6 +914,7 @@ export default {
         this.detailTruckQueue.plate = item.plate;
         this.detailTruckQueue.checkIn = item.checkIn;
         this.detailTruckQueue.checkOut = item.checkOut;
+        this.detailTruckQueue.remark = item.remark;
         this.detailTruckQueue.itemDataTable = response.data.results;
       } else if (response.data.status == 404) {
         this.loadingDialog = false;

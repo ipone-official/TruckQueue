@@ -1,10 +1,13 @@
 <template>
   <div>
-    <v-layout justify-end  v-if="
+    <v-layout
+      justify-end
+      v-if="
         (['TruckQueue_Vendor'].some((i) => infoLogin.group.includes(i)) &&
           detailTruckQueue.status == 'CONFIRMED') ||
         ['TruckQueue_Admin'].some((i) => infoLogin.group.includes(i))
-      ">
+      "
+    >
       <v-tooltip top color="teal">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -140,19 +143,37 @@
       class="custom-layout mt-1"
       v-show="detailTruckQueue.status == 'ACCEPTED'"
     >
-      <v-flex xs12 sm3 md3 class="pa-0">
+      <v-flex xs12 sm3 md3 class="pa-0" v-if="detailTruckQueue.checkIn != ''">
         <v-card flat class="small-card">
           <v-card-title class="custom-title small-margin">Check-In</v-card-title>
           <v-card-text class="small-margin"
-            ><strong>{{ detailTruckQueue.checkIn }}</strong></v-card-text
+            ><strong>{{
+              detailTruckQueue.checkIn == ""
+                ? ""
+                : functions.formatDateFormat(detailTruckQueue.checkIn)
+            }}</strong></v-card-text
           >
         </v-card>
       </v-flex>
-      <v-flex xs12 sm3 md3 class="pa-0">
+      <v-flex xs12 sm3 md3 class="pa-0" v-if="detailTruckQueue.checkOut != ''">
         <v-card flat class="small-card">
           <v-card-title class="custom-title small-margin">Check-Out</v-card-title>
           <v-card-text class="small-margin"
-            ><strong>{{ detailTruckQueue.checkOut }}</strong></v-card-text
+            ><strong>{{
+              detailTruckQueue.checkOut == ""
+                ? ""
+                : functions.formatDateFormat(detailTruckQueue.checkOut)
+            }}</strong></v-card-text
+          >
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap class="custom-layout mt-1" v-if="detailTruckQueue.remark != ''">
+      <v-flex xs12 sm12 md12 class="pa-0">
+        <v-card flat class="small-card">
+          <v-card-title class="custom-title small-margin">Remark</v-card-title>
+          <v-card-text class="small-margin"
+            ><strong>{{ detailTruckQueue.remark }}</strong></v-card-text
           >
         </v-card>
       </v-flex>
@@ -369,5 +390,4 @@ export default {
 .custom-autocomplete .v-input__slot {
   color: red;
 }
-
 </style>
