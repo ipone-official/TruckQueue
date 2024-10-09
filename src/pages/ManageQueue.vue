@@ -362,7 +362,7 @@
             class="white--text"
             text
             style="border-radius: 12px"
-            @click="submitTruckQueue(editMode)"
+            @click="submitTruckQueue()"
             >Submit</v-btn
           >
           <v-btn
@@ -608,7 +608,7 @@ export default {
         });
       }
     },
-    submitTruckQueue(mode) {
+    submitTruckQueue() {
       if (isEmpty(this.fPurchasing)) {
         this.showResult = true;
         return (this.msgResult = "Purchasing order can't be null.");
@@ -682,12 +682,6 @@ export default {
           }
         }
       });
-    },
-    pad(number) {
-      return number < 10 ? "0" + number : number;
-    },
-    updateTime() {
-      this.$emit("input", `${this.pad(this.hours)}:${this.pad(this.minutes)}`);
     },
     getDisabled(val) {
       if (!["PLANNED"].includes(val)) {
