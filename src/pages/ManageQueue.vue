@@ -965,6 +965,7 @@ export default {
               elementJson.push(element);
             }
           }
+          this.loadingDialog = true;
           const response = await axios.post(
             ` ${this.Endpoint}/TruckQueue/v1/UpdateTruckQueue`,
             elementJson
