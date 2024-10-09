@@ -322,7 +322,7 @@ export default {
               driverName: this.dataQueue[0].driverName,
               driverPhone: this.dataQueue[0].driverPhone,
               status: status,
-              reasonID: dataQueue[0].checkIn != "" ? this.mReason.reasonID : "",
+              reasonID: this.dataQueue[0].checkIn != "" ? this.mReason.reasonID : "",
               reasonDesc:
                 this.dataQueue[0].checkIn != ""
                   ? this.mReason.reasonID == "R999"
