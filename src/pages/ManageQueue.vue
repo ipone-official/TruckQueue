@@ -426,7 +426,7 @@ export default {
   data() {
     return {
       StatusItem: [
-        { key: 1, text: "PLANED" },
+        { key: 1, text: "PLANNED" },
         { key: 2, text: "CONFIRMED" },
         { key: 3, text: "ACCEPTED" },
         { key: 4, text: "TIMEOUT" },
